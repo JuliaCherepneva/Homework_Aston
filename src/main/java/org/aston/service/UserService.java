@@ -8,12 +8,21 @@ import org.hibernate.Transaction;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Сервисный класс для управления сущностями UserModel.
+ * Отвечает за CRUD-операции (создание, чтение, обновление, удаление) пользователей в базе данных.
+ */
 public class UserService implements ServiceImpl {
     private SessionFactory sessionFactory;
     public UserService(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Создает нового пользователя в базе данных.
+     *
+     * @param user объект пользователя для сохранения.
+     */
     @Override
     public void create(UserModel user) {
         try (Session session = sessionFactory.openSession()) {
@@ -25,6 +34,12 @@ public class UserService implements ServiceImpl {
         }
     }
 
+    /**
+     * Считывает пользователя по его ID.
+     *
+     * @param id идентификатор пользователя.
+     * @return объект UserModel или null, если пользователь не найден.
+     */
     @Override
     public UserModel read(int id) {
         try (Session session = sessionFactory.openSession()) {
@@ -35,6 +50,11 @@ public class UserService implements ServiceImpl {
         }
     }
 
+    /**
+     * Обновляет данные пользователя в базе данных.
+     *
+     * @param user объект пользователя с обновлёнными данными.
+     */
     @Override
     public void update(UserModel user) {
         try (Session session = sessionFactory.openSession()) {
@@ -46,6 +66,11 @@ public class UserService implements ServiceImpl {
         }
     }
 
+    /**
+     * Удаляет пользователя по его ID.
+     *
+     * @param id идентификатор пользователя для удаления.
+     */
     @Override
     public void delete(int id) {
         try (Session session = sessionFactory.openSession()) {
@@ -60,6 +85,11 @@ public class UserService implements ServiceImpl {
         }
     }
 
+    /**
+     * Получает список всех пользователей.
+     *
+     * @return список пользователей, либо пустой список в случае ошибки.
+     */
     @Override
     public List<UserModel> getAll() {
         try (Session session = sessionFactory.openSession()) {

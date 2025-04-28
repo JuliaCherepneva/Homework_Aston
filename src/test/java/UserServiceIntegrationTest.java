@@ -11,6 +11,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Интеграционные тесты для класса UserService.
+ * Использует Testcontainers для запуска временной базы данных PostgreSQL.
+ */
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceIntegrationTest {
@@ -18,19 +22,20 @@ class UserServiceIntegrationTest {
     private SessionFactory sessionFactory;
     private UserService userService;
 
-    // Твой контейнер Postgres
     @Container
     private static final PostgresTestContainer postgresContainer = PostgresTestContainer.getInstance();
 
+    /**
+     * Настройка Hibernate и создание UserService перед всеми тестами.
+     */
     @BeforeAll
     void setUp() {
-        // Здесь настраиваем Hibernate, чтобы он подключился к контейнеру
         Configuration configuration = new Configuration();
         configuration.setProperty("hibernate.connection.url", postgresContainer.getJdbcUrl());
         configuration.setProperty("hibernate.connection.username", postgresContainer.getUsername());
         configuration.setProperty("hibernate.connection.password", postgresContainer.getPassword());
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "update"); // Авто-создание таблиц
+        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
         configuration.addAnnotatedClass(UserModel.class);
 
         sessionFactory = configuration.buildSessionFactory();
@@ -44,9 +49,11 @@ class UserServiceIntegrationTest {
         }
     }
 
+    /**
+     * Очистка таблицы пользователей перед каждым тестом.
+     */
     @BeforeEach
     void cleanUp() {
-        // Перед каждым тестом очищаем базу, чтобы не было старых данных
         try (var session = sessionFactory.openSession()) {
             var transaction = session.beginTransaction();
             session.createQuery("DELETE FROM UserModel").executeUpdate();

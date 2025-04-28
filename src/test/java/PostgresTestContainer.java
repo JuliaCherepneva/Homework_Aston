@@ -17,7 +17,10 @@ class PostgresTestContainer extends PostgreSQLContainer<PostgresTestContainer>{
         }
         return container;
     }
-
+    /**
+     * Переопределённый метод старта контейнера.
+     * Устанавливает дефолтные свойства системы для подключения к базе данных.
+     */
     @Override
     public void start() {
         super.start();
