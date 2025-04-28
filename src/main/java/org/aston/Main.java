@@ -15,15 +15,15 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("1. Create User");
-            System.out.println("2. Read User");
-            System.out.println("3. Update User");
-            System.out.println("4. Delete User");
-            System.out.println("5. List All Users");
-            System.out.println("6. Exit");
+            System.out.println("1. Создать пользователя");
+            System.out.println("2. Показать пользователя");
+            System.out.println("3. Обновить пользователя");
+            System.out.println("4. Удалить пользователя");
+            System.out.println("5. Показать всех пользователей");
+            System.out.println("6. Выход");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -45,94 +45,98 @@ public class Main {
                     HibernateUtil.shutdown();
                     return;
                 default:
-                    System.out.println("Invalid choice. Try again.");
+                    System.out.println("Неверный выбор. Попробуйте ещё раз.");
             }
         }
     }
 
     private static void createUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Enter name: ");
+        System.out.print("Введите имя: ");
         String name = scanner.nextLine();
-        System.out.print("Enter email: ");
+        System.out.print("Введите электронную почту: ");
         String email = scanner.nextLine();
-        System.out.print("Enter age: ");
+        System.out.print("Введите возраст: ");
         int age = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         UserModel user = new UserModel(name, email, age, LocalDateTime.now());
         userService.create(user);
-        System.out.println("User created successfully.");
+        System.out.println("Пользователь успешно создан.");
     }
 
     private static void readUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Enter user ID: ");
+        System.out.print("Введите ID пользователя: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         UserModel user = userService.read(id);
         if (user != null) {
-            System.out.println("User: " + user.getName() + ", Email: " + user.getEmail() + ", Age: " + user.getAge());
+            System.out.println("Пользователь: " + user.getName() +
+                    ", Почта: " + user.getEmail() +
+                    ", Возраст: " + user.getAge());
         } else {
-            System.out.println("User not found.");
+            System.out.println("Пользователь не найден.");
         }
     }
 
     private static void updateUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Enter user ID: ");
+        System.out.print("Введите ID пользователя: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         UserModel existingUser = userService.read(id);
         if (existingUser == null) {
-            System.out.println("User not found.");
+            System.out.println("Пользователь не найден.");
             return;
         }
 
-        System.out.print("Enter new name (leave blank to keep current): ");
+        System.out.print("Введите новое имя (оставьте пустым, чтобы не изменять): ");
         String name = scanner.nextLine();
         if (!name.isEmpty()) {
             existingUser.setName(name);
         }
 
-        System.out.print("Enter new email (leave blank to keep current): ");
+        System.out.print("Введите новую почту (оставьте пустым, чтобы не изменять): ");
         String email = scanner.nextLine();
         if (!email.isEmpty()) {
             existingUser.setEmail(email);
         }
 
-        System.out.print("Enter new age (leave blank to keep current): ");
+        System.out.print("Введите новый возраст (оставьте пустым, чтобы не изменять): ");
         String ageInput = scanner.nextLine();
         if (!ageInput.isEmpty()) {
             existingUser.setAge(Integer.parseInt(ageInput));
         }
 
         userService.update(existingUser);
-        System.out.println("User updated successfully.");
+        System.out.println("Пользователь успешно обновлён.");
     }
 
     private static void deleteUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Enter user ID: ");
+        System.out.print("Введите ID пользователя: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         UserModel user = userService.read(id);
         if (user == null) {
-            System.out.println("User not found.");
+            System.out.println("Пользователь не найден.");
             return;
         }
 
         userService.delete(id);
-        System.out.println("User deleted successfully.");
+        System.out.println("Пользователь успешно удалён.");
     }
 
     private static void listAllUsers(ServiceImpl userService) {
         List<UserModel> users = userService.getAll();
         if (users.isEmpty()) {
-            System.out.println("No users found.");
+            System.out.println("Пользователи не найдены.");
         } else {
             for (UserModel user : users) {
-                System.out.println("ID: " + user.getId() + ", Name: " + user.getName() +
-                        ", Email: " + user.getEmail() + ", Age: " + user.getAge());
+                System.out.println("ID: " + user.getId() +
+                        ", Имя: " + user.getName() +
+                        ", Почта: " + user.getEmail() +
+                        ", Возраст: " + user.getAge());
             }
         }
     }
