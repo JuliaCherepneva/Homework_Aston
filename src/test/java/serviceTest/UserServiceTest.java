@@ -5,6 +5,7 @@ import org.aston.service.UserService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,19 +15,33 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import org.hibernate.query.Query;
-
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static util.TestObjectFactory.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static util.TestObjectFactory.createDefaultUser;
+import static util.TestObjectFactory.createRandomUsers;
+import static util.TestObjectFactory.createUserWithCustomName;
+import static util.TestObjectFactory.createUserWithId;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class UserServiceTest {
-
+// Переписал тесты с учётом @MockitoSettings и других аннотаций под JUnit 5
+// добавил LENIENT для пропуска обязательных стаков у моков,так как не во всех тестах мы обращаемся к
+// экземпляру UserService, иногда нам нужно проверить какие-то абстрактные вещи
+// + убрал сплошные импорты, вроде на прошлом вебинаре говорили,что это плохой тон
+// + добавил 4 тестовых метода. Нам наверное нужно будет их привести единообразию по названиям,а можем и так оставить
     @Mock
     private SessionFactory sessionFactory;
     @Mock

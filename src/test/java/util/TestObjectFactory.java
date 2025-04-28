@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public final class TestObjectFactory {
+    // Фабрика для создания объектов для тестов,что бы в тестовых классах по сути были только тесты
+    // и вызов методов для создания объектов
     private static final Random random = new Random();
     private TestObjectFactory() {
         throw new UnsupportedOperationException("Хахахахахахааххаахахах");
