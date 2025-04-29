@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
+/**
+ * Утилитарный класс для валидации данных пользователя.
+ */
 public class Validate {
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private static final Validator validator = factory.getValidator();

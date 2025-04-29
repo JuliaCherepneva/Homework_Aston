@@ -11,10 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static util.TestObjectFactory.createDefaultUser;
 
+/**
+ * Тесты для класса Validate.
+ */
+class ValidateTest {
 
-public class ValidateTest {
-    // Тесты для проверки метода валидации.Моки здесь по сути не нужны,мы не обращаемся к БД
-    // и отлавливаем ошибки на этапе создания объекта до того как отработает Hibernate
     @Test
     @DisplayName("Тест успешной валидации валидного UserModel")
     void validateUserShouldPassWhenValid() {

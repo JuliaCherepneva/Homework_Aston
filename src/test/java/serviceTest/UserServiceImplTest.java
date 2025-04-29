@@ -34,14 +34,13 @@ import static util.TestObjectFactory.createRandomUsers;
 import static util.TestObjectFactory.createUserWithCustomName;
 import static util.TestObjectFactory.createUserWithId;
 
+/**
+ * Тесты для класса UserService.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UserServiceTest {
-// Переписал тесты с учётом @MockitoSettings и других аннотаций под JUnit 5
-// добавил LENIENT для пропуска обязательных стаков у моков,так как не во всех тестах мы обращаемся к
-// экземпляру UserService, иногда нам нужно проверить какие-то абстрактные вещи
-// + убрал сплошные импорты, вроде на прошлом вебинаре говорили,что это плохой тон
-// + добавил 4 тестовых метода. Нам наверное нужно будет их привести единообразию по названиям,а можем и так оставить
+class UserServiceImplTest {
+
     @Mock
     private SessionFactory sessionFactory;
     @Mock
@@ -52,6 +51,10 @@ class UserServiceTest {
     private ArgumentCaptor<UserModel> userCaptor;
     @InjectMocks
     private UserServiceImpl userService;
+
+    /**
+     * Метод для создания нового сеанса и транзакции перед каждым тестом.
+     */
     @BeforeEach
     void setUp() {
         when(sessionFactory.openSession()).thenReturn(session);

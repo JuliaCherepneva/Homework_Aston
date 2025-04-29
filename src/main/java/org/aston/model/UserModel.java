@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Сущность, представляющая пользователя.
+ */
 @Data
 @Entity
 @Table(name = "users")

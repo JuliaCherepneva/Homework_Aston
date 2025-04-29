@@ -7,13 +7,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * Фабрика для создания объектов для тестов.
+ */
 public final class TestObjectFactory {
-    // Фабрика для создания объектов для тестов,что бы в тестовых классах по сути были только тесты
-    // и вызов методов для создания объектов
+
     private static final Random random = new Random();
+
     private TestObjectFactory() {
-        throw new UnsupportedOperationException("Хахахахахахааххаахахах");
+        throw new UnsupportedOperationException("Создание экземпляров TestObjectFactory невозможно.");
     }
+
     public static UserModel createDefaultUser() {
         return UserModel.builder()
                 .name("Default Name")
@@ -22,6 +26,7 @@ public final class TestObjectFactory {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
     public static UserModel createUserWithCustomName(String name) {
         return UserModel.builder()
                 .name(name)
@@ -30,11 +35,13 @@ public final class TestObjectFactory {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
     public static UserModel createUserWithId(int id) {
         UserModel user = createDefaultUser();
         user.setId(id);
         return user;
     }
+
     public static UserModel createRandomUser() {
         String name = "User" + UUID.randomUUID().toString().substring(0, 8);
         return UserModel.builder()
@@ -44,6 +51,7 @@ public final class TestObjectFactory {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
     public static List<UserModel> createRandomUsers(int count) {
         return java.util.stream.Stream.generate(TestObjectFactory::createRandomUser)
                 .limit(count)

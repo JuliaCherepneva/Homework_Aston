@@ -1,3 +1,5 @@
+package testContainer;
+
 import org.aston.model.UserModel;
 import org.aston.service.UserServiceImpl;
 import org.hibernate.SessionFactory;
@@ -13,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Интеграционные тесты для класса UserService.
- * Использует Testcontainers для запуска временной базы данных PostgreSQL.
+ * Использует Test containers для запуска временной базы данных PostgreSQL.
  */
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -62,6 +64,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName ("Тест создает и получает пользователя")
     void testCreateAndReadUser() {
         UserModel user = new UserModel("Володя", "Володя@mail.com", 30, LocalDateTime.now());
         userService.create(user);
@@ -75,6 +78,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName ("Тест обновляет пользователя")
     void testUpdateUser() {
         UserModel user = new UserModel("Володя", "Володя@mail.com", 28, LocalDateTime.now());
         userService.create(user);
@@ -88,6 +92,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
+    @DisplayName ("Тест удаляет пользователя")
     void testDeleteUser() {
         UserModel user = new UserModel("Володя", "Володя@mail.com", 40, LocalDateTime.now());
         userService.create(user);
