@@ -1,8 +1,8 @@
 package org.aston;
 
 import org.aston.model.UserModel;
-import org.aston.service.ServiceImpl;
 import org.aston.service.UserService;
+import org.aston.service.UserServiceImpl;
 import org.aston.util.HibernateUtil;
 import org.aston.util.Validate;
 
@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        ServiceImpl userService = new UserService(HibernateUtil.getSessionFactory());
-        Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final UserService userService = new UserServiceImpl(HibernateUtil.getSessionFactory());
+    private static final String ENTER_ID_USER = "Введите ID пользователя: ";
+    private static final String USER_NOT_FOUND = "Пользователь не найден.";
 
+    public static void main(String[] args) {
         while (true) {
             System.out.println("1. Создать пользователя");
             System.out.println("2. Показать пользователя");
@@ -29,19 +31,19 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    createUser(userService, scanner);
+                    createUser();
                     break;
                 case 2:
-                    readUser(userService, scanner);
+                    readUser();
                     break;
                 case 3:
-                    updateUser(userService, scanner);
+                    updateUser();
                     break;
                 case 4:
-                    deleteUser(userService, scanner);
+                    deleteUser();
                     break;
                 case 5:
-                    listAllUsers(userService);
+                    listAllUsers();
                     break;
                 case 6:
                     HibernateUtil.shutdown();
@@ -52,24 +54,23 @@ public class Main {
         }
     }
 
-    private static void createUser(ServiceImpl userService, Scanner scanner) {
+    private static void createUser() {
         System.out.print("Введите имя: ");
-        String name = scanner.nextLine();
+        String name = Main.scanner.nextLine();
         System.out.print("Введите электронную почту: ");
-        String email = scanner.nextLine();
+        String email = Main.scanner.nextLine();
         System.out.print("Введите возраст: ");
-        int age = scanner.nextInt();
+        int age = Main.scanner.nextInt();
         scanner.nextLine();
 
         UserModel user = new UserModel(name, email, age, LocalDateTime.now());
         Validate.validateUser(user);
-        // немного переписал код с учётом метода валидации
         userService.create(user);
         System.out.println("Пользователь успешно создан.");
     }
 
-    private static void readUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Введите ID пользователя: ");
+    private static void readUser() {
+        System.out.print(ENTER_ID_USER);
         int id = scanner.nextInt();
         scanner.nextLine();
 
@@ -79,33 +80,33 @@ public class Main {
                     ", Почта: " + user.getEmail() +
                     ", Возраст: " + user.getAge());
         } else {
-            System.out.println("Пользователь не найден.");
+            System.out.println(USER_NOT_FOUND);
         }
     }
 
-    private static void updateUser(ServiceImpl userService, Scanner scanner) {
+    private static void updateUser() {
         try {
-            System.out.print("Введите ID пользователя: ");
+            System.out.print(ENTER_ID_USER);
             int id = scanner.nextInt();
             scanner.nextLine();
             UserModel existingUser = userService.read(id);
 
             if (existingUser == null) {
-                System.out.println("Пользователь не найден.");
+                System.out.println(USER_NOT_FOUND);
                 return;
             }
 
             System.out.print("Введите новое имя (оставьте пустым, чтобы не изменять): ");
             String name = scanner.nextLine();
-        if (!name.isEmpty()) {
-            existingUser.setName(name);
+            if (!name.isEmpty()) {
+                existingUser.setName(name);
             }
 
 
             System.out.print("Введите новую почту (оставьте пустым, чтобы не изменять): ");
             String email = scanner.nextLine();
-        if (!email.isEmpty()) {
-            existingUser.setEmail(email);
+            if (!email.isEmpty()) {
+                existingUser.setEmail(email);
             }
 
             System.out.print("Введите новый возраст: ");
@@ -114,8 +115,6 @@ public class Main {
             existingUser.setAge(ageInput);
 
             Validate.validateUser(existingUser);
-            // здесь тоже чуть-чуть переписал целый метод updateUser,
-            // можно откатиться если такой вариант не валиден
             userService.update(existingUser);
             System.out.println("Пользователь успешно обновлён.");
 
@@ -124,14 +123,14 @@ public class Main {
         }
     }
 
-    private static void deleteUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Введите ID пользователя: ");
+    private static void deleteUser() {
+        System.out.print(ENTER_ID_USER);
         int id = scanner.nextInt();
         scanner.nextLine();
 
         UserModel user = userService.read(id);
         if (user == null) {
-            System.out.println("Пользователь не найден.");
+            System.out.println(USER_NOT_FOUND);
             return;
         }
 
@@ -139,10 +138,10 @@ public class Main {
         System.out.println("Пользователь успешно удалён.");
     }
 
-    private static void listAllUsers(ServiceImpl userService) {
+    private static void listAllUsers() {
         List<UserModel> users = userService.getAll();
         if (users.isEmpty()) {
-            System.out.println("Пользователи не найдены.");
+            System.out.println(USER_NOT_FOUND);
         } else {
             for (UserModel user : users) {
                 System.out.println("ID: " + user.getId() +

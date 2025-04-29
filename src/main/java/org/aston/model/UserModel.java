@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
 @Data
 @Entity
 @Table(name = "users")
@@ -17,10 +16,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserModel {
-    // Здесь добавил @Builder для фабрики (такой подход рил показался интересным - паттерны,все дела)
-    // и @AllArgsConstructor необходимый для @Builder. Ну просто мы реально очень неплохо разгружаем тесты, наверно.
-    // Нужно у нашего лектора спросить.
-    // Остальные аннотации сугубо для валидации
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +46,5 @@ public class UserModel {
         this.age = age;
         this.createdAt = createdAt;
     }
-
 }
 
