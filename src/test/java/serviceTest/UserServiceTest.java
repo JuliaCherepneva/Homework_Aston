@@ -1,7 +1,7 @@
 package serviceTest;
 
 import org.aston.model.UserModel;
-import org.aston.service.UserService;
+import org.aston.service.UserServiceImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -51,7 +51,7 @@ class UserServiceTest {
     @Captor
     private ArgumentCaptor<UserModel> userCaptor;
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
     @BeforeEach
     void setUp() {
         when(sessionFactory.openSession()).thenReturn(session);

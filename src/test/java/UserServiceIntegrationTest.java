@@ -1,5 +1,5 @@
 import org.aston.model.UserModel;
-import org.aston.service.UserService;
+import org.aston.service.UserServiceImpl;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceIntegrationTest {
 
     private SessionFactory sessionFactory;
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Container
     private static final PostgresTestContainer postgresContainer = PostgresTestContainer.getInstance();
@@ -39,7 +39,7 @@ class UserServiceIntegrationTest {
         configuration.addAnnotatedClass(UserModel.class);
 
         sessionFactory = configuration.buildSessionFactory();
-        userService = new UserService(sessionFactory);
+        userService = new UserServiceImpl(sessionFactory);
     }
 
     @AfterAll
