@@ -4,8 +4,10 @@ import org.aston.model.UserModel;
 import org.aston.service.ServiceImpl;
 import org.aston.service.UserService;
 import org.aston.util.HibernateUtil;
+import org.aston.util.Validate;
 
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -60,6 +62,8 @@ public class Main {
         scanner.nextLine();
 
         UserModel user = new UserModel(name, email, age, LocalDateTime.now());
+        Validate.validateUser(user);
+        // немного переписал код с учётом метода валидации
         userService.create(user);
         System.out.println("Пользователь успешно создан.");
     }
@@ -80,36 +84,44 @@ public class Main {
     }
 
     private static void updateUser(ServiceImpl userService, Scanner scanner) {
-        System.out.print("Введите ID пользователя: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            System.out.print("Введите ID пользователя: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            UserModel existingUser = userService.read(id);
 
-        UserModel existingUser = userService.read(id);
-        if (existingUser == null) {
-            System.out.println("Пользователь не найден.");
-            return;
-        }
+            if (existingUser == null) {
+                System.out.println("Пользователь не найден.");
+                return;
+            }
 
-        System.out.print("Введите новое имя (оставьте пустым, чтобы не изменять): ");
-        String name = scanner.nextLine();
+            System.out.print("Введите новое имя (оставьте пустым, чтобы не изменять): ");
+            String name = scanner.nextLine();
         if (!name.isEmpty()) {
             existingUser.setName(name);
-        }
+            }
 
-        System.out.print("Введите новую почту (оставьте пустым, чтобы не изменять): ");
-        String email = scanner.nextLine();
+
+            System.out.print("Введите новую почту (оставьте пустым, чтобы не изменять): ");
+            String email = scanner.nextLine();
         if (!email.isEmpty()) {
             existingUser.setEmail(email);
-        }
+            }
 
-        System.out.print("Введите новый возраст (оставьте пустым, чтобы не изменять): ");
-        String ageInput = scanner.nextLine();
-        if (!ageInput.isEmpty()) {
-            existingUser.setAge(Integer.parseInt(ageInput));
-        }
+            System.out.print("Введите новый возраст: ");
+            int ageInput = scanner.nextInt();
+            scanner.nextLine();
+            existingUser.setAge(ageInput);
 
-        userService.update(existingUser);
-        System.out.println("Пользователь успешно обновлён.");
+            Validate.validateUser(existingUser);
+            // здесь тоже чуть-чуть переписал целый метод updateUser,
+            // можно откатиться если такой вариант не валиден
+            userService.update(existingUser);
+            System.out.println("Пользователь успешно обновлён.");
+
+        } catch (InputMismatchException e) {
+            System.out.println("Ошибка при вводе данных " + e.getMessage());
+        }
     }
 
     private static void deleteUser(ServiceImpl userService, Scanner scanner) {
