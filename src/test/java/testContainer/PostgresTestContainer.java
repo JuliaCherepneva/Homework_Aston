@@ -1,7 +1,10 @@
+package testContainer;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
-
+/**
+ * Класс представляет собой контейнер для тестирования, основанный на PostgreSQL.
+ */
 class PostgresTestContainer extends PostgreSQLContainer<PostgresTestContainer>{
 
     private static final String IMAGE_VERSION = "postgres:15-alpine";

@@ -5,11 +5,13 @@ import org.aston.model.UserModel;
 
 import java.util.Set;
 
+/**
+ * Утилитарный класс для валидации данных пользователя.
+ */
 public class Validate {
-    // Добавил валидацию через Bean validation такой подход показался лучше,
-    // чем у меня самого до этого было во втором дз через if
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private static final Validator validator = factory.getValidator();
+
     public static void validateUser(UserModel userModel) {
         Set<ConstraintViolation<UserModel>> validationError = validator.validate(userModel);
         if (!validationError.isEmpty()) {
