@@ -3,8 +3,7 @@ package org.aston.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aston.model.UserDTO;
-import org.aston.model.UserDTO_withID;
+import org.aston.dto.UserDTO;
 import org.aston.service.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,33 +19,36 @@ public class UserController {
 
     private final UserServiceImpl userService;
     @PostMapping
-    public ResponseEntity<UserDTO_withID> createUser(@RequestBody @Valid UserDTO userDTO) {
-        UserDTO_withID userDTO_withID = userService.create(userDTO);
-        URI location = URI.create("/users/" + userDTO_withID.getId());
-        return ResponseEntity.created(location).body(userDTO_withID);
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
+        UserDTO userDTOResponse = userService.create(userDTO);
+        URI location = URI.create("/users/" + userDTOResponse.getId());
+        return ResponseEntity.created(location).body(userDTOResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO_withID> getUser(@PathVariable Long id) {
-        UserDTO_withID userDTO_withID = userService.get(id);
-        URI location = URI.create("/users/" + userDTO_withID.getId());
-        return ResponseEntity.created(location).body(userDTO_withID);
+    public ResponseEntity<UserDTO> getUser(@PathVariable("id") Integer id) {
+        UserDTO userDTOResponse = userService.getById(id);
+        URI location = URI.create("/users/" + userDTOResponse.getId());
+        return ResponseEntity.created(location).body(userDTOResponse);
     }
 
-    @GetMapping
-    public ResponseEntity <List<UserDTO_withID>> getUsers(@RequestParam(defaultValue = "10") Long count) {
-        List<UserDTO_withID> users = userService.getCount(count);
-        if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(users);
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserDTO>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
-    @PatchMapping("/{id}") //идемпотентность
-    public ResponseEntity<UserDTO_withID> updateUser(@RequestBody UserDTO userDTO,
-                                                     @PathVariable Long id) {
-        UserDTO_withID userDTO_withID = userService.update(userDTO, id);
-        URI location = URI.create("/users/" + userDTO_withID.getId());
-        return ResponseEntity.created(location).body(userDTO_withID);
+    @PutMapping("update/{id}") //идемпотентность
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO,
+                                                     @PathVariable("id") Integer id) {
+        UserDTO userDTOResponse = userService.update(id, userDTO);
+        URI location = URI.create("/users/" + userDTOResponse.getId());
+        return ResponseEntity.ok(userDTOResponse);
+    }
+
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
+        userService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

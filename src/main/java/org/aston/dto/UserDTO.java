@@ -1,14 +1,23 @@
-package org.aston.model;
+package org.aston.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class UserDTO {
+    private Integer id;
     @NotBlank(message = "Имя пользователя должно содержать от 3 до 100 символов")
     @Size(min = 3, max = 100)
     private String name;
