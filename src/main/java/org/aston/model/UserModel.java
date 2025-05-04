@@ -1,12 +1,13 @@
 package org.aston.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+
 import java.time.LocalDateTime;
 
 /**
@@ -22,7 +23,7 @@ public class UserModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name", nullable = false)
     @NotBlank(message = "Имя пользователя должно содержать от 3 до 100 символов")
@@ -38,7 +39,7 @@ public class UserModel {
     @NotNull(message = "Возраст обязателен для заполнения")
     @Min(value = 8, message = "Возраст пользователя не должен быть меньше 8")
     @Max(value = 99, message = "Возраст пользователя не должен превышать 99 лет")
-    private int age;
+    private Integer age;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
