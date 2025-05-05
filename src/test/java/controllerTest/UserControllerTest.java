@@ -68,7 +68,7 @@ class UserControllerTest {
 
     @Test
     void testCreateUser() throws Exception {
-        UserDTO newUser = new UserDTO(null, "John Smith", "johnsmith@example.com", 10, LocalDateTime.now());
+//        UserDTO newUser = new UserDTO(null, "John Smith", "johnsmith@example.com", 10, LocalDateTime.now());
         UserDTO createdUser = new UserDTO(1, "John Smith", "johnsmith@example.com", 10, LocalDateTime.now());
         when(userService.create(any(UserDTO.class))).thenReturn(createdUser);
 
@@ -104,7 +104,7 @@ class UserControllerTest {
     @Test
     void testUpdateUser() throws Exception {
         UserDTO updatedUser = new UserDTO(1, "John Smith", "johnsmith@example.com", 10, LocalDateTime.now());
-        when(userService.update(1, updatedUser)).thenReturn(updatedUser);
+        when(userService.update(eq(1), any(UserDTO.class))).thenReturn(updatedUser);
         mockMvc.perform(put("/users/update/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"John Smith\",\"email\":\"johnsmith@example.com\",\"age\":10}"))
@@ -113,7 +113,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.email").value("johnsmith@example.com"))
                 .andExpect(jsonPath("$.age").value(10));
-        verify(userService, times(1)).update(1, updatedUser);
+        verify(userService, times(1)).update(eq(1), any(UserDTO.class));
     }
 
 

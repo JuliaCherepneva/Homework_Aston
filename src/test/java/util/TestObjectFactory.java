@@ -1,5 +1,6 @@
 package util;
 
+import org.aston.dto.UserDTO;
 import org.aston.model.UserModel;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,11 @@ import java.util.UUID;
  * Фабрика для создания объектов для тестов.
  */
 public final class TestObjectFactory {
+    public static final String bigStringForValidNameTest = "abcdefghijklmnopqrstuwyxyz + " +
+            "abcdefghijklmnopqrstuwyxyz + " +
+            "abcdefghijklmnopqrstuwyxyz + " +
+            "abcdefghijklmnopqrstuwyxyz + " +
+            "abcdefghijklmnopqrstuwyxyz + ";
 
     private static final Random random = new Random();
 
@@ -18,43 +24,17 @@ public final class TestObjectFactory {
         throw new UnsupportedOperationException("Создание экземпляров TestObjectFactory невозможно.");
     }
 
-    public static UserModel createDefaultUser() {
-        return UserModel.builder()
+    public static String invalidNames() {
+        String name = "wrongName";
+        return name.repeat(100);
+    }
+
+    public static UserDTO createDefaultUser() {
+        return UserDTO.builder()
                 .name("Default Name")
                 .email("default@example.com")
                 .age(30)
                 .createdAt(LocalDateTime.now())
                 .build();
-    }
-
-    public static UserModel createUserWithCustomName(String name) {
-        return UserModel.builder()
-                .name(name)
-                .email(name.toLowerCase().replace(" ", ".") + "@example.com")
-                .age(25)
-                .createdAt(LocalDateTime.now())
-                .build();
-    }
-
-    public static UserModel createUserWithId(int id) {
-        UserModel user = createDefaultUser();
-        user.setId(id);
-        return user;
-    }
-
-    public static UserModel createRandomUser() {
-        String name = "User" + UUID.randomUUID().toString().substring(0, 8);
-        return UserModel.builder()
-                .name(name)
-                .email(name.toLowerCase() + "@example.com")
-                .age(18 + random.nextInt(50))
-                .createdAt(LocalDateTime.now())
-                .build();
-    }
-
-    public static List<UserModel> createRandomUsers(int count) {
-        return java.util.stream.Stream.generate(TestObjectFactory::createRandomUser)
-                .limit(count)
-                .toList();
     }
 }

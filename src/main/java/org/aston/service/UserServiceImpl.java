@@ -7,6 +7,7 @@ import org.aston.exception.EntityNotFoundException;
 import org.aston.mapper.UserMapper;
 import org.aston.model.UserModel;
 import org.aston.repository.UserRepository;
+import org.aston.util.Update;
 import org.aston.util.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    //logger можно удалить,мы им не пользуемся
 
     @Override
     public UserDTO create(UserDTO userDTO) {
@@ -65,10 +67,10 @@ public class UserServiceImpl implements UserService {
         Validate.validateUser(userDTO);
         Optional<UserModel> userModel = Optional.ofNullable(userRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Пользователь с указанным ID " + id + " не обнаружен в БД")));
-        userModel.get().setName(userDTO.getName());
-        userModel.get().setEmail(userDTO.getEmail());
-        userModel.get().setAge(userDTO.getAge());
-        userModel.get().setCreatedAt(userDTO.getCreatedAt());
+        Update.update(userDTO,userModel);
+        // немного переписал, т.к. это проще выглядит по архитектуре + у нас PATCH и мы меняем у объекта только некоторые
+        // поля, из-за этого если что-то придёт null, то он автоматически запишет это в БД при коде
+        // userModel.get().setAge(userDTO.getAge());
         userModel = Optional.of(userRepository.save(userModel.orElse(null)));
         log.info("Пользователь с ID = {} обновлён", userModel.get().getId());
         return UserMapper.toDto(userModel.orElse(null));

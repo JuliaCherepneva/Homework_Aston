@@ -7,17 +7,16 @@ import org.aston.dto.UserDTO;
 public class UserMapper {
 
     public static UserDTO toDto(UserModel model) {
-        UserDTO dto = new UserDTO();
-        dto.setId(model.getId());
-        dto.setName(model.getName());
-        dto.setEmail(model.getEmail());
-        dto.setAge(model.getAge());
-        return dto;
-    }
+        return UserDTO.builder()
+                .id(model.getId())
+                .name(model.getName())
+                .email(model.getEmail())
+                .age(model.getAge())
+                .build();
+    } //что бы всё у нас было в одном стиле,раз мы в DTO используем билдер
 
     public static UserModel toEntity(UserDTO dto) {
         return UserModel.builder()
-                .id(dto.getId())
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .age(dto.getAge())

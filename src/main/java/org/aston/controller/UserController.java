@@ -37,15 +37,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @PutMapping("update/{id}") //идемпотентность
+    @PutMapping("update/{id}")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO,
                                                      @PathVariable("id") Integer id) {
         UserDTO userDTOResponse = userService.update(id, userDTO);
         URI location = URI.create("/users/" + userDTOResponse.getId());
         return ResponseEntity.ok(userDTOResponse);
     }
-
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         userService.delete(id);

@@ -11,11 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,7 +80,7 @@ class UserServiceImplTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             userService.getById(1);
         });
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("Пользователь с указанным ID 1 не обнаружен в БД", exception.getMessage());
     }
 
     @Test
@@ -88,6 +90,7 @@ class UserServiceImplTest {
         userDTO.setName("Petya");
         userDTO.setEmail("petya@example.com");
         userDTO.setAge(30);
+        userDTO.setCreatedAt(LocalDateTime.now());
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(userRepository.save(any(UserModel.class))).thenReturn(user);
