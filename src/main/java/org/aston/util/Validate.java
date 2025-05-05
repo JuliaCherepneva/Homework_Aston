@@ -28,7 +28,7 @@ public class Validate {
         if (userDTO.getAge() < 8 || userDTO.getAge() > 99) {
             throw new ValidationException("Возраст пользователя не должен быть меньше 8 и больше 99 лет");
         }
-        if (userDTO.getCreatedAt().isAfter(LocalDateTime.now())) {
+        if (userDTO.getCreatedAt() != null && userDTO.getCreatedAt().isAfter(LocalDateTime.now())) {
             throw new ValidationException("Дата создания пользователя не может быть в будущем");
         }
     }

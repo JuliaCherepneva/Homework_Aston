@@ -22,5 +22,15 @@ public class UserMapper {
                 .age(dto.getAge())
                 .build();
     }
+
+    public static UserDTO toDtoWithDate(UserModel model) {
+        return UserDTO.builder()
+                .id(model.getId())
+                .name(model.getName())
+                .email(model.getEmail())
+                .age(model.getAge())
+                .createdAt(model.getCreatedAt())
+                .build();
+    }
 }
 

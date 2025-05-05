@@ -34,14 +34,8 @@ public class UserModel {
     private String email;
     @Column(name = "age")
     private int age;
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public UserModel(String name, String email, int age, LocalDateTime createdAt) {
-        this.name = name;
-        this.email = email;
-        this.age = age;
-        this.createdAt = createdAt;
-    }
 }
 

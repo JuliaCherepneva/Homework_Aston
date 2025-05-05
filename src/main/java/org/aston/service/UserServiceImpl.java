@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,29 +27,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    //logger можно удалить,мы им не пользуемся
 
     @Override
     public UserDTO create(UserDTO userDTO) {
-        Optional<UserModel> userModel = Optional.ofNullable(UserMapper.toEntity(userDTO));
-        userModel = Optional.of(userRepository.save(userModel.orElse(null)));
-        log.info("Создан пользователь с ID = {}, имя = {}", userModel.get().getId(), userModel.get().getName());
-        return UserMapper.toDto(userModel.orElse(null));
+        UserModel userModel =UserMapper.toEntity(userDTO);
+        userModel.setCreatedAt(LocalDateTime.now());
+        userModel = userRepository.save(userModel);
+        log.info("Создан пользователь с ID = {}, имя = {}", userModel.getId(), userModel.getName());
+        return UserMapper.toDtoWithDate(userModel);
     }
 
     @Override
     public UserDTO getById(Integer id) {
         UserModel userModel = userRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Пользователь с указанным ID " + id + " не обнаружен в БД"));
-        return UserMapper.toDto(userModel);
+        return UserMapper.toDtoWithDate(userModel);
     }
 
     @Override
     public List<UserDTO> getAll() {
         return userRepository.findAll()
                 .stream()
-                .map(UserMapper::toDto)
+                .map(UserMapper::toDtoWithDate)
                 .collect(Collectors.toList());
     }
 
@@ -68,11 +68,8 @@ public class UserServiceImpl implements UserService {
         Optional<UserModel> userModel = Optional.ofNullable(userRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Пользователь с указанным ID " + id + " не обнаружен в БД")));
         Update.update(userDTO,userModel);
-        // немного переписал, т.к. это проще выглядит по архитектуре + у нас PATCH и мы меняем у объекта только некоторые
-        // поля, из-за этого если что-то придёт null, то он автоматически запишет это в БД при коде
-        // userModel.get().setAge(userDTO.getAge());
         userModel = Optional.of(userRepository.save(userModel.orElse(null)));
         log.info("Пользователь с ID = {} обновлён", userModel.get().getId());
-        return UserMapper.toDto(userModel.orElse(null));
+        return UserMapper.toDtoWithDate(userModel.orElse(null));
     }
 }
