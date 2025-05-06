@@ -12,6 +12,7 @@ import org.aston.util.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public UserDTO create(UserDTO userDTO) {
         UserModel userModel =UserMapper.toEntity(userDTO);
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toDtoWithDate(userModel);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDTO getById(Integer id) {
         UserModel userModel = userRepository.findById(id).orElseThrow(()
@@ -44,6 +47,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toDtoWithDate(userModel);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<UserDTO> getAll() {
         return userRepository.findAll()
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional
     @Override
     public void delete(Integer id) {
         UserModel userModel = userRepository.findById(id).orElseThrow(()
@@ -61,7 +66,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userModel.getId());
     }
 
-
+    @Transactional
     @Override
     public UserDTO update(Integer id, UserDTO userDTO) {
         Validate.validateUser(userDTO);
