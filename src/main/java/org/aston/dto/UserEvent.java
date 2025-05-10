@@ -1,13 +1,14 @@
 package org.aston.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEvent {
-    private int userId;
+    private Integer userId;
     private String email;
-    private OperationType operation;
-
-    public UserEvent(int id, String email, OperationType operationType) {
-    }
+    private OperationType operationType;
 }
