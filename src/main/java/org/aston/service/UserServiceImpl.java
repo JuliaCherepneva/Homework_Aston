@@ -2,7 +2,9 @@ package org.aston.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aston.dto.OperationType;
 import org.aston.dto.UserDTO;
+import org.aston.dto.UserEvent;
 import org.aston.exception.EntityNotFoundException;
 import org.aston.mapper.UserMapper;
 import org.aston.model.UserModel;
@@ -11,6 +13,7 @@ import org.aston.util.Update;
 import org.aston.util.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +22,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Сервисный класс для управления сущностями UserModel.
- * Отвечает за CRUD-операции (создание, чтение, обновление, удаление) пользователей в базе данных.
- */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final KafkaTemplate<String, UserEvent> kafkaTemplate;
 
     @Transactional
     @Override
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
         userModel.setCreatedAt(LocalDateTime.now());
         userModel = userRepository.save(userModel);
         log.info("Создан пользователь с ID = {}, имя = {}", userModel.getId(), userModel.getName());
+        kafkaTemplate.send("user-events", new UserEvent(userModel.getId(), userModel.getEmail(), OperationType.CREATE));
         return UserMapper.toDtoWithDate(userModel);
     }
 
@@ -64,6 +66,7 @@ public class UserServiceImpl implements UserService {
                 -> new EntityNotFoundException("Пользователь с указанным ID " + id + " не обнаружен в БД"));
         log.info("Пользователь с ID = {} удален", userModel.getId());
         userRepository.deleteById(userModel.getId());
+        kafkaTemplate.send("user-events", new UserEvent(userModel.getId(), userModel.getEmail(), OperationType.DELETE));
     }
 
     @Transactional
