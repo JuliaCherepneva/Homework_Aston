@@ -11,8 +11,6 @@ import org.aston.model.UserModel;
 import org.aston.repository.UserRepository;
 import org.aston.util.Update;
 import org.aston.util.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +24,11 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final KafkaTemplate<String, UserEvent> kafkaTemplate;
 
-    @Transactional
     @Override
     public UserDTO create(UserDTO userDTO) {
         UserModel userModel =UserMapper.toEntity(userDTO);
@@ -58,8 +56,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-
-    @Transactional
     @Override
     public void delete(Integer id) {
         UserModel userModel = userRepository.findById(id).orElseThrow(()
@@ -69,7 +65,6 @@ public class UserServiceImpl implements UserService {
         kafkaTemplate.send("user-events", new UserEvent(userModel.getId(), userModel.getEmail(), OperationType.DELETE));
     }
 
-    @Transactional
     @Override
     public UserDTO update(Integer id, UserDTO userDTO) {
         Validate.validateUser(userDTO);
