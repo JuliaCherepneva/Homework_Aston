@@ -1,0 +1,165 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /users/update/{id}:
+    put:
+      tags:
+      - Пользователи
+      summary: Обновление информации о пользователе
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /users:
+    post:
+      tags:
+      - Пользователи
+      summary: Создание пользователя
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /users/{id}:
+    get:
+      tags:
+      - Пользователи
+      summary: Получение пользователя
+      operationId: getUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /users/getAll:
+    get:
+      tags:
+      - Пользователи
+      summary: Получение всех пользователей
+      operationId: getAll
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CollectionModelUserDTO'
+  /users/delete/{id}:
+    delete:
+      tags:
+      - Пользователи
+      summary: Удаление пользователя
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Links:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Link'
+    UserDTO:
+      required:
+      - age
+      - email
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          maxLength: 100
+          minLength: 3
+          type: string
+        email:
+          type: string
+        age:
+          maximum: 99
+          minimum: 8
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        _links:
+          $ref: '#/components/schemas/Links'
+    CollectionModelUserDTO:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            userDTOList:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserDTO'
+        _links:
+          $ref: '#/components/schemas/Links'
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        hreflang:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        deprecation:
+          type: string
+        profile:
+          type: string
+        name:
+          type: string
+        templated:
+          type: boolean
