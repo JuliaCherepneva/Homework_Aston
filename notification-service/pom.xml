@@ -10,15 +10,9 @@
         <groupId>org.aston</groupId>
         <artifactId>HW</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>notification-service</artifactId>
-
-    <properties>
-        <!-- Можно убрать, унаследуется из parent -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <!-- Spring Boot Starter Web -->
@@ -73,6 +67,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
                         </path>
                     </annotationProcessorPaths>
                     <source>${java.version}</source>

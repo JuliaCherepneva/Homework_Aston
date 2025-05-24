@@ -1,5 +1,6 @@
 package assembler;
 
+import org.aston.assembler.UserModelAssembler;
 import org.aston.controller.UserController;
 import org.aston.dto.UserDTO;
 import org.junit.jupiter.api.BeforeEach;
