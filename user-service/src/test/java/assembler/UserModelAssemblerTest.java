@@ -1,4 +1,4 @@
-package org.aston.assembler;
+package assembler;
 
 import org.aston.controller.UserController;
 import org.aston.dto.UserDTO;

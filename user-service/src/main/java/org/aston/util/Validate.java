@@ -2,12 +2,10 @@ package org.aston.util;
 
 import jakarta.validation.*;
 import org.aston.dto.UserDTO;
-import org.aston.model.UserModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * Утилитарный класс для валидации данных пользователя.

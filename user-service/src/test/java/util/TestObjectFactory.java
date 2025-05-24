@@ -4,9 +4,7 @@ import org.aston.dto.UserDTO;
 import org.aston.model.UserModel;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Фабрика для создания объектов для тестов.

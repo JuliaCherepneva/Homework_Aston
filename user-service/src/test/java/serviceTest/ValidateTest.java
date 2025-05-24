@@ -2,12 +2,10 @@ package serviceTest;
 
 import jakarta.validation.ValidationException;
 import org.aston.dto.UserDTO;
-import org.aston.model.UserModel;
 import org.aston.util.Validate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
